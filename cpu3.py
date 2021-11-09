@@ -16,8 +16,11 @@ class Module(core.module.Module):
 
     def full_text(self, widgets):
         # set defaults for parameters
-        format = self.parameter("format", "LOAD {load} TEMP {temp}")
+        format = self.parameter("format", "LOAD {load} TEMP {temp} FAN {fan}")
         chip   = self.parameter("chip", "")
+
+        """ tempsensor = "temp1_input"
+        fansensor = "fan1_input" """
 
         # get load and temperature
         mpresultresult = os.popen("mpstat 2 1").read().split("\n") # output: 
@@ -32,9 +35,13 @@ class Module(core.module.Module):
         cputemp1in = [e for e in sensorsresult if 'temp1_input:' in e][0] # get temp1_input for this chip
         cputemp    = str(float(cputemp1in.replace("  temp1_input: ", "")).__round__(2)) + "°C"
 
+        fan1in = [e for e in sensorsresult if 'fan1_input:' in e][0] # get fan1_input for this chip
+        fan    = str(int(fan1in.replace("  fan1_input: ", "").split(".")[0])) + " RPM" # get fan speed from value and discard anything behind the dot
+
         # replace words in format with values
         format = format.replace("{load}", cpuload)
         format = format.replace("{temp}", cputemp)
+        format = format.replace("{fan}", fan)
 
         # print result
         return format
