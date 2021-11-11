@@ -37,13 +37,15 @@ class Module(core.module.Module):
         cputemp1in = [e for e in sensorsresult if f'{tempsensor}:' in e][0] # get temp1_input for this chip
         cputemp    = str(float(cputemp1in.replace(f"  {tempsensor}: ", "")).__round__(2)) + "°C"
 
-        fan1in = [e for e in sensorsresult if f'{fansensor}:' in e][0] # get fan1_input for this chip
-        fan    = str(int(fan1in.replace(f"  {fansensor}: ", "").split(".")[0])) + " RPM" # get fan speed from value and discard anything behind the dot
+        if "{fan}" in format: # only check if user wants to display it to prevent error when sensor does not exist
+            fan1in = [e for e in sensorsresult if f'{fansensor}:' in e][0] # get fan1_input for this chip
+            fan    = str(int(fan1in.replace(f"  {fansensor}: ", "").split(".")[0])) + " RPM" # get fan speed from value and discard anything behind the dot
+
+            format = format.replace("{fan}", fan)
 
         # replace words in format with values
         format = format.replace("{load}", cpuload)
         format = format.replace("{temp}", cputemp)
-        format = format.replace("{fan}", fan)
 
         # print result
         return format
