@@ -25,8 +25,8 @@ class Module(core.module.Module):
         fansensor  = self.parameter("fansensor", "fan1_input")
 
         # get load and temperature
-        mpresultresult = os.popen("mpstat 2 1").read().split("\n") # output: 
-        sensorsresult  = os.popen(f"sensors -u {chip}").read().split("\n") # output: 
+        mpresultresult = os.popen("mpstat 2 1").read().split("\n") # output:
+        sensorsresult  = os.popen(f"sensors -u {chip}").read().split("\n") # output:
 
         # retrieve idle value from output, round the number, calculate load (100 - idle) and format string
         cpuaverage = mpresultresult[len(mpresultresult) - 2].split(" ")
